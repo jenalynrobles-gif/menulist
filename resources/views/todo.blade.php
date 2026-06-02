@@ -93,14 +93,22 @@ body {
 
 .nav-menu {
     position: absolute;
-    left: 50%; top: 50%;
+    left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     gap: 2rem;
-    margin: 0; padding: 0;
-    flex: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
     justify-content: center;
     align-items: center;
+}
+.nav-menu li {
+    list-style: none;
+}
+.nav-menu li::before {
+    content: "•";
 }
 
 .nav-link {
