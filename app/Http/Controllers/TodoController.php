@@ -25,8 +25,9 @@ class TodoController extends Controller
         $pendingCount = Todo::where('completed', false)->count();
         $completedCount = Todo::where('completed', true)->count();
         
-            return view('welcome');
+       return view('todo', compact('todos', 'filter', 'totalCount', 'pendingCount', 'completedCount'));
     }
+
     public function store(Request $request)
     {
         $request->validate([
