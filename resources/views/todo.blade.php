@@ -101,6 +101,13 @@ body {
     flex: none;
     justify-content: center;
     align-items: center;
+    list-style: none !important;
+}
+
+.nav-menu li {
+    list-style: none !important;
+    padding: 0;
+    margin: 0;
 }
 
 .nav-link {
@@ -173,7 +180,7 @@ body {
 .mobile-menu.open { transform: translateX(0); }
 
 .mobile-nav-links {
-    list-style: none;
+    list-style: none !important;
     margin: 0; padding: 0;
     flex: 1;
     display: flex;
@@ -181,6 +188,12 @@ body {
     gap: 1.5rem;
     align-items: center;
     justify-content: center;
+}
+
+.mobile-nav-links li {
+    list-style: none !important;
+    padding: 0;
+    margin: 0;
 }
 
 .mobile-nav-link {
