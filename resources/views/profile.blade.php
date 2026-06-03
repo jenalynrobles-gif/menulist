@@ -298,12 +298,19 @@ body.sidebar-collapsed .page-wrapper { margin-left: var(--sidebar-collapsed); wi
     <div class="container">
 
       @php
+    use Illuminate\Support\Facades\Storage;
+
     $avatarTimestamp = $user->updated_at
         ? $user->updated_at->timestamp
         : time();
 
+    // Storage::url() returns the correct public URL for the stored path
+    // (e.g. "uploads/abc.jpg" → "/storage/uploads/abc.jpg"), and with
+    // URL::forceScheme('https') set in AppServiceProvider it will be https://
+    // in production. The cache-busting ?v= param ensures browsers reload
+    // the image after an upload.
     $avatarSrc = $user->avatar
-        ? asset('storage/uploads/' . $user->avatar) . '?v=' . $avatarTimestamp
+        ? Storage::disk('public')->url($user->avatar) . '?v=' . $avatarTimestamp
         : asset('images/blank.jpg');
 
     $defaultAvatar = asset('images/blank.jpg');

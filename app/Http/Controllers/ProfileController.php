@@ -64,16 +64,31 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        if ($request->hasFile('avatar')) {
+        if (!$request->hasFile('avatar')) {
+            return redirect()->route('profile.edit')
+                ->with('error', 'No file was uploaded.');
+        }
 
+        try {
+            // Delete the old avatar from persistent storage if it exists
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
 
+            // Store the new file under uploads/ on the public disk.
+            // store() returns a path relative to the disk root, e.g. "uploads/abc123.jpg"
             $path = $request->file('avatar')->store('uploads', 'public');
+
+            if (!$path) {
+                return redirect()->route('profile.edit')
+                    ->with('error', 'Failed to save the uploaded file. Please try again.');
+            }
 
             $user->avatar = $path;
             $user->save();
+        } catch (\Exception $e) {
+            return redirect()->route('profile.edit')
+                ->with('error', 'An error occurred while uploading your photo: ' . $e->getMessage());
         }
 
         return redirect()->route('profile.edit')
@@ -84,8 +99,13 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
+        try {
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+        } catch (\Exception $e) {
+            // Log but don't block the removal — the DB record should still be cleared
+            \Log::warning('Could not delete avatar file: ' . $e->getMessage());
         }
 
         $user->avatar = null;
