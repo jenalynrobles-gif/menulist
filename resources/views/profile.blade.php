@@ -298,14 +298,12 @@ body.sidebar-collapsed .page-wrapper { margin-left: var(--sidebar-collapsed); wi
     <div class="container">
 
       @php
-    use Illuminate\Support\Facades\Storage;
-
     $avatarTimestamp = $user->updated_at
         ? $user->updated_at->timestamp
         : time();
 
-    $avatarSrc = $user->avatar && Storage::disk('public')->exists($user->avatar)
-        ? Storage::disk('public')->url($user->avatar) . '?v=' . $avatarTimestamp
+    $avatarSrc = $user->avatar
+        ? asset('storage/uploads/' . $user->avatar) . '?v=' . $avatarTimestamp
         : asset('images/blank.jpg');
 
     $defaultAvatar = asset('images/blank.jpg');

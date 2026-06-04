@@ -27,6 +27,15 @@ Route::delete('/todos/{todo}', [TodoController::class, 'destroy'])->name('todos.
 Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store');
 
+Route::get('/dashboard', function () {
+    $users         = User::all();
+    $totalUsers    = User::count();
+    $activeUsers   = User::where('status', 'active')->count();
+    $inactiveUsers = User::where('status', 'inactive')->count();
+    $cacheTs       = time();
+    return view('dashboard', compact('users', 'totalUsers', 'activeUsers', 'inactiveUsers', 'cacheTs'));
+});
+
 Route::get('/users', [UserController::class, 'index']);
 Route::post('/users', [UserController::class, 'store']);
 Route::put('/users/{id}', [UserController::class, 'update']);
@@ -34,15 +43,6 @@ Route::delete('/users/{id}', [UserController::class, 'destroy']);
 Route::get('/api/users/{id}', [UserController::class, 'show']);
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        $users         = User::all();
-        $totalUsers    = User::count();
-        $activeUsers   = User::where('status', 'active')->count();
-        $inactiveUsers = User::where('status', 'inactive')->count();
-        $cacheTs       = time();
-        return view('dashboard', compact('users', 'totalUsers', 'activeUsers', 'inactiveUsers', 'cacheTs'));
-    })->name('dashboard');
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/photo/update', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
