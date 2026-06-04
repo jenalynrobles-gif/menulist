@@ -304,7 +304,7 @@ th:nth-child(2), td:nth-child(2) { text-align: center; width: 70px; padding: 10p
                             <td>{{ $u->id }}</td>
                           <td>
     <img
-        src="{{ $u->avatar ? Storage::url($u->avatar) . '?v=' . ($u->updated_at ? $u->updated_at->timestamp : time()) : asset('images/blank.jpg') }}"
+        src="{{ $u->avatar && Storage::disk('public')->exists($u->avatar) ? Storage::disk('public')->url($u->avatar) . '?v=' . ($u->updated_at ? $u->updated_at->timestamp : time()) : asset('images/blank.jpg') }}"
         alt="{{ $u->name }}"
         class="user-avatar"
         onerror="this.src='{{ asset('images/blank.jpg') }}'"
